@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import cis2206.model.Employee;
-import cis2206.model.IEmployeeDAO;
+import cis2206.model.Music;
+import cis2206.model.IMusicDAO;
 
 /**
  * EmployeeDAO (Data Access Object) handles all interactions with the data
@@ -25,12 +25,12 @@ import cis2206.model.IEmployeeDAO;
  * @version 20160920
  *
  */
-public class EmployeeDAO implements IEmployeeDAO {
+public class MusicDAO implements IMusicDAO {
 
     protected String fileName = null;
-    protected final List<Employee> myList;
+    protected final List<Music> myList;
 
-    public EmployeeDAO() {
+    public MusicDAO() {
         Properties props = new Properties();
         try {
             props.load(new FileInputStream("res/file/db.properties"));
@@ -53,15 +53,15 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public void createRecord(Employee employee) {
-        myList.add(employee);
+    public void createRecord(Music music) {
+        myList.add(music);
         writeList();
     }
 
     @Override
-    public Employee retrieveRecordById(int id) {
-        for (Employee employee : myList) {
-            if (employee.getEmpId() == id) {
+    public Music retrieveRecordById(int id) {
+        for (Music employee : myList) {
+            if (employee.getMusicId() == id) {
                 return employee;
             }
         }
@@ -69,18 +69,18 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public List<Employee> retrieveAllRecords() {
+    public List<Music> retrieveAllRecords() {
         return myList;
     }
 
     @Override
-    public void updateRecord(Employee updatedEmployee) {
-        for (Employee employee : myList) {
-            if (employee.getEmpId() == updatedEmployee.getEmpId()) {
-                employee.setLastName(updatedEmployee.getLastName());
-                employee.setFirstName(updatedEmployee.getFirstName());
-                employee.setHomePhone(updatedEmployee.getHomePhone());
-                employee.setSalary(updatedEmployee.getSalary());
+    public void updateRecord(Music updatedMusic) {
+        for (Music music : myList) {
+            if (music.getMusicId() == updatedMusic.getMusicId()) {
+                music.setTitle(updatedMusic.getTitle());
+                music.setArtist(updatedMusic.getArtist());
+                music.setAlbum(updatedMusic.getAlbum());
+                music.setYear(updatedMusic.getYear());
                 break;
             }
         }
@@ -89,8 +89,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     @Override
     public void deleteRecord(int id) {
-        for (Employee employee : myList) {
-            if (employee.getEmpId() == id) {
+        for (Music employee : myList) {
+            if (employee.getMusicId() == id) {
                 myList.remove(employee);
                 break;
             }
@@ -99,8 +99,8 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public void deleteRecord(Employee employee) {
-        myList.remove(employee);
+    public void deleteRecord(Music music) {
+        myList.remove(music);
         writeList();
     }
 
@@ -111,12 +111,12 @@ public class EmployeeDAO implements IEmployeeDAO {
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
                 int id = Integer.parseInt(data[0]);
-                String last = data[1];
-                String first = data[2];
-                String homePhone = data[3];
+                String title = data[1];
+                String artist = data[2];
+                String album = data[3];
                 double salary = Double.parseDouble(data[4]);
-                Employee employee = new Employee(id, last, first, homePhone, salary);
-                myList.add(employee);
+                Music music = new Music(id, title, artist, album, salary);
+                myList.add(music);
             }
         } catch (IOException ioe) {
             System.out.println("Read file error with " + ioe.getMessage());
@@ -126,13 +126,13 @@ public class EmployeeDAO implements IEmployeeDAO {
     private void writeList() {
         Path path = Paths.get(fileName);
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-            for (Employee employee : myList) {
+            for (Music music : myList) {
                 writer.write(String.format("%d,%s,%s,%s,%.2f\n",
-                        employee.getEmpId(),
-                        employee.getLastName(),
-                        employee.getFirstName(),
-                        employee.getHomePhone(),
-                        employee.getSalary()));
+                        music.getMusicId(),
+                        music.getTitle(),
+                        music.getArtist(),
+                        music.getAlbum(),
+                        music.getYear()));
             }
         } catch (IOException ioe) {
             System.out.println("Write file error with " + ioe.getMessage());
@@ -143,13 +143,13 @@ public class EmployeeDAO implements IEmployeeDAO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (Employee employee : myList) {
+        for (Music employee : myList) {
             sb.append(String.format("%5d : %s, %s, %s, %.2f\n",
-                    employee.getEmpId(),
-                    employee.getLastName(),
-                    employee.getFirstName(),
-                    employee.getHomePhone(),
-                    employee.getSalary()));
+                    employee.getMusicId(),
+                    employee.getTitle(),
+                    employee.getAlbum(),
+                    employee.getArtist(),
+                    employee.getYear()));
         }
 
         return sb.toString();

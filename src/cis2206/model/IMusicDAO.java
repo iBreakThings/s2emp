@@ -13,19 +13,19 @@ import java.util.List;
  * @version 20151009
  *
  */
-public interface IEmployeeDAO {
+public interface IMusicDAO {
 
-    void createRecord(Employee employee);
+    void createRecord(Music music);
 
-    Employee retrieveRecordById(int id);
+    Music retrieveRecordById(int id);
 
-    List<Employee> retrieveAllRecords();
+    List<Music> retrieveAllRecords();
 
-    void updateRecord(Employee updatedEmployee);
+    void updateRecord(Music updatedMusic);
 
     void deleteRecord(int id);
 
-    void deleteRecord(Employee employee);
+    void deleteRecord(Music music);
 
     @Override
     String toString();

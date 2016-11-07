@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cis2206.model.Employee;
-import cis2206.model.IEmployeeDAO;
+import cis2206.model.Music;
+import cis2206.model.IMusicDAO;
 
 /**
  * EmployeeDAO (Data Access Object) handles all interactions with the data
@@ -19,22 +19,22 @@ import cis2206.model.IEmployeeDAO;
  * @version 20160920
  *
  */
-public class EmployeeDAO implements IEmployeeDAO {
+public class MusicDAO implements IMusicDAO {
 
     protected final static boolean DEBUG = true;
 
     @Override
-    public void createRecord(Employee employee) {
-        final String QUERY = "insert into employee "
-                + "(empId, lastName, firstName, homePhone, salary) "
+    public void createRecord(Music music) {
+        final String QUERY = "insert into music "
+                + "(musicId, title, artist, album, year) "
                 + "VALUES (null, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY);) {
-            stmt.setString(1, employee.getLastName());
-            stmt.setString(2, employee.getFirstName());
-            stmt.setString(3, employee.getHomePhone());
-            stmt.setDouble(4, employee.getSalary());
+            stmt.setString(1, music.getTitle());
+            stmt.setString(2, music.getArtist());
+            stmt.setString(3, music.getAlbum());
+            stmt.setDouble(4, music.getYear());
             if (DEBUG) {
                 System.out.println(stmt.toString());
             }
@@ -46,12 +46,12 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public Employee retrieveRecordById(int id) {
-        final String QUERY = "select empId, lastName, firstName, homePhone, "
-                + "salary from employee where empId = " + id;
+    public Music retrieveRecordById(int id) {
+        final String QUERY = "select musicId, title, artist, ablum, "
+                + "year from music where musicId = " + id;
         // final String QUERY = "select empId, lastName, firstName, homePhone,
         // salary from employee where empId = ?";
-        Employee emp = null;
+        Music music = null;
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY)) {
@@ -62,26 +62,26 @@ public class EmployeeDAO implements IEmployeeDAO {
             ResultSet rs = stmt.executeQuery(QUERY);
 
             if (rs.next()) {
-                emp = new Employee(
-                        rs.getInt("empId"), 
-                        rs.getString("lastName"),
-                        rs.getString("firstName"),
-                        rs.getString("homePhone"), 
-                        rs.getDouble("salary"));
+                music = new Music(
+                        rs.getInt("musicId"), 
+                        rs.getString("Title"),
+                        rs.getString("Artist"),
+                        rs.getString("Album"), 
+                        rs.getDouble("Year"));
             }
         } catch (SQLException ex) {
             System.out.println("retrieveRecordById SQLException: " 
                     + ex.getMessage());
         }
 
-        return emp;
+        return music;
     }
 
     @Override
-    public List<Employee> retrieveAllRecords() {
-        final List<Employee> myList = new ArrayList<>();
-        final String QUERY = "select empId, lastName, firstName, homePhone, "
-                + "salary from employee";
+    public List<Music> retrieveAllRecords() {
+        final List<Music> myList = new ArrayList<>();
+        final String QUERY = "select musicId, title, artist, album, "
+                + "year from music";
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY)) {
@@ -91,12 +91,12 @@ public class EmployeeDAO implements IEmployeeDAO {
             ResultSet rs = stmt.executeQuery(QUERY);
 
             while (rs.next()) {
-                myList.add(new Employee(
-                        rs.getInt("empId"), 
-                        rs.getString("lastName"), 
-                        rs.getString("firstName"),
-                        rs.getString("homePhone"), 
-                        rs.getDouble("salary")));
+                myList.add(new Music(
+                        rs.getInt("musicId"), 
+                        rs.getString("title"), 
+                        rs.getString("artist"),
+                        rs.getString("alubm"), 
+                        rs.getDouble("year")));
             }
         } catch (SQLException ex) {
             System.out.println("retrieveAllRecords SQLException: " + ex.getMessage());
@@ -106,17 +106,17 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public void updateRecord(Employee updatedEmployee) {
-        final String QUERY = "update employee set lastName=?, firstName=?, "
-                + "homePhone=?, salary=? where empId=?";
+    public void updateRecord(Music updatedMusic) {
+        final String QUERY = "update music set title=?, artist=?, "
+                + "album=?, year=? where musicId=?";
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY)) {
-            stmt.setString(1, updatedEmployee.getLastName());
-            stmt.setString(2, updatedEmployee.getFirstName());
-            stmt.setString(3, updatedEmployee.getHomePhone());
-            stmt.setDouble(4, updatedEmployee.getSalary());
-            stmt.setInt(5, updatedEmployee.getEmpId());
+            stmt.setString(1, updatedMusic.getTitle());
+            stmt.setString(2, updatedMusic.getArtist());
+            stmt.setString(3, updatedMusic.getAlbum());
+            stmt.setDouble(4, updatedMusic.getYear());
+            stmt.setInt(5, updatedMusic.getMusicId());
             if (DEBUG) {
                 System.out.println(stmt.toString());
             }
@@ -128,7 +128,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     @Override
     public void deleteRecord(int id) {
-        final String QUERY = "delete from employee where empId = ?";
+        final String QUERY = "delete from employee where musicId = ?";
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY)) {
@@ -143,12 +143,12 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public void deleteRecord(Employee employee) {
-        final String QUERY = "delete from employee where empId = ?";
+    public void deleteRecord(Music music) {
+        final String QUERY = "delete from music where musicId = ?";
 
         try (Connection con = DBConnection.getConnection(); 
                 PreparedStatement stmt = con.prepareStatement(QUERY)) {
-            stmt.setInt(1, employee.getEmpId());
+            stmt.setInt(1, music.getMusicId());
             if (DEBUG) {
                 System.out.println(stmt.toString());
             }
@@ -162,8 +162,8 @@ public class EmployeeDAO implements IEmployeeDAO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (Employee employee : retrieveAllRecords()) {
-            sb.append(employee.toString()).append("\n");
+        for (Music music : retrieveAllRecords()) {
+            sb.append(music.toString()).append("\n");
         }
 
         return sb.toString();

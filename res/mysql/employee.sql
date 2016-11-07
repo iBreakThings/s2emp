@@ -1,10 +1,10 @@
 use s2emp;
-drop table if exists employee;
-create table employee (
-  empId int unsigned not null auto_increment,
-  lastName varchar(24) not null,
-  firstName varchar(18) not null,
-  homePhone varchar(14) not null,
-  salary double not null,
-  primary key(empId)
+drop table if exists music;
+create table music (
+  songId int unsigned not null auto_increment,
+  Title varchar(48) not null,
+  Artist varchar(24) not null,
+  Album varchar(24) not null,
+  Year double not null,
+  primary key(songId)
 );
